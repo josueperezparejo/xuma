@@ -12,10 +12,12 @@ export class MongoDatabase {
     try {
       await mongoose.connect(mongoURL, {
         dbName: dbName,
+        ssl: true,
       });
 
       console.log("✅ Mongo Database connected");
     } catch (error) {
+      console.log("🚀 ~ MongoDatabase ~ connect ~ error:", error);
       console.error("❌ Unable to connect to the Mongo database");
       throw error;
     }
