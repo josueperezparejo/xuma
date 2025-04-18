@@ -1,33 +1,94 @@
-# 🧱 Backend Template – Express + TypeScript + Sequelize
+# 🖥️ Xuma
 
-# Design Pattern Repository
+## 🛠️ Technical Test Requirements
 
-This is a clean, scalable backend template built with **Express.js**, **TypeScript**, and **Sequelize**. It includes a class-based server structure, PostgreSQL database integration, Sequelize CLI support for migrations and seeds, and essential middlewares for security and logging.
+This project was developed as part of a technical test for a Semi-Senior Node.js Developer position. The goal was to build a simple, modular Order Management System using Node.js and TypeScript, following clean architecture principles and applying best practices.
 
-## 📦 Features
+### Goal
 
-- ⚙️ **Express 5** with TypeScript
-- 🧠 **Sequelize ORM** for PostgreSQL with CLI support (migrations, seeds)
-- 🗃️ Class-based server architecture
-- 🌱 Environment-specific database configs via `.env`
-- 🪪 Security with `helmet`
-- 🔍 Logging with `morgan`
-- 🔁 Live reload with `tsx watch`
-- ✅ Ready for input validation with `express-validator`
-- 🌍 CORS support
-- 🧹 Clean build process using `rimraf`
+Build an **Order Management System** using **Node.js** and **TypeScript**.
+
+### Requirements
+
+1. **Order Management**:
+
+- Register, update, and query customer orders.
+- Each order must include:
+  - **ID**: Unique identifier.
+  - **Date**: Timestamp of the order.
+  - **Status**: Current state of the order.
+  - **Customer Info**: Name, email, and contact details.
+  - **Product List**: Items with name, price, and quantity.
+
+2. **Order Total Calculation**:
+
+- Automatically calculate the total price for each order (`price × quantity`).
+
+3. **Status Transitions**:
+
+- Allowed transitions:
+  - `pending → processing`
+  - `processing → completed` or `processing → cancelled`
+- No changes allowed once the status is `completed` or `cancelled`.
+
+4. **Querying**:
+
+- Search orders by:
+  - **Customer email**
+  - **Order status**
+
+5. **Storage**:
+
+- Use **in-memory storage** or a **JSON file** (no real database).
+
+6. **Modular Architecture**:
+
+- Separate business logic from data access.
+
+### Bonus (Optional)
+
+- **REST API**:
+
+  - Implement endpoints using **Express**.
+
+- **Input Validation**:
+
+  - Validate incoming data for correctness.
+
+- **Strong Typing**:
+
+  - Use **TypeScript interfaces** and types for all entities.
+
+- **Logging**:
+  - Implement logging (console or file-based) for debugging and monitoring.
 
 ## 🚀 Getting Started
+
+### Live Deployment
+
+If you'd like to try the project deployed online, you can visit:
+
+👉 https://xuma-czs5.onrender.com
+
+This project is deployed using Render and uses Neon.tech for PostgreSQL and MongoDB databases.
+
+### ⚠️ Temporary Availability Notice
+
+This project was temporarily made available online solely for the purpose of the technical test. It may be taken down or become unavailable at any time after the evaluation period.
+
+### Local Deployment
 
 ### 1. Clone the repo and install dependencies
 
 ```bash
-git clone https://github.com/your-username/backend-template-express.git
-cd backend-template-express
+git clone https://github.com/josueperezparejo/xuma.git
+cd xuma
 npm install
 ```
 
-### 2. Create your .env file
+### 2. Setup environment variables
+
+Create a .env file in the root directory:
 
 ```javascript
 # App Ports
@@ -53,25 +114,42 @@ PGADMIN_DEFAULT_EMAIL=example_admin@example.com
 PGADMIN_DEFAULT_PASSWORD=example_password
 PGADMIN_PORT=8080
 
+# Mongo
+MONGO_URL=mongodb://user:password@localhost:27017/
+MONGO_DB_NAME=database_name
+MONGO_USER=user
+MONGO_PASS=password
+
 ```
 
-### 3. Project Structure
+### 3. Ensure Docker is Installed
+
+This project uses Docker to run services such as PostgreSQL, PgAdmin, and MongoDB. If you don't have Docker installed, you can download it from https://www.docker.com/get-started
+
+### 4. Start the containers with Docker Compose
+
+Run the following command to start the containers:
 
 ```bash
-src/
-├── config/            # DB credentials loaded from .env
-├── controllers/       # Business logic for each route
-├── database/          # Sequelize setup (authenticate, sync, instance)
-├── middlewares/       # Middlewares for validation, errors, etc.
-├── models/            # Sequelize model definitions
-├── routes/            # Express routes grouped by resource
-├── services/          # Optional: logic separated from controllers
-├── validators/        # express-validator schemas
-├── server.ts          # Class-based server configuration
-└── index.ts           # App entry point
+docker-compose up -d
 ```
 
-### 4. Scripts
+### 5. Run Migrations and Seeders
+
+Once the containers are up and the project is configured:
+
+```
+npm run db:migrate
+npm run db:seed
+```
+
+### 6. Start the server in development mode
+
+```
+npm run dev
+```
+
+### 7. Available Scripts
 
 | Script                  | Description                                             |
 | ----------------------- | ------------------------------------------------------- |
@@ -81,7 +159,7 @@ src/
 | `npm run clean`         | Removes the `dist/` folder                              |
 | `db:migrate`, `db:seed` | Sequelize CLI commands for managing DB migrations/seeds |
 
-### 5. Sequelize CLI Scripts
+### 8. Sequelize CLI Commands
 
 | Command                   | Environment | Description                       |
 | ------------------------- | ----------- | --------------------------------- |
@@ -93,145 +171,122 @@ src/
 
 💡 Sequelize reads the environment from NODE_ENV and uses matching .env variables.
 
-### 6. Database Handling
+## 📦 Available REST APIs for Order Management
 
-```typescript
-const database = {
-  sequelize,
-  Sequelize,
-  async authenticate() {
-    try {
-      await sequelize.authenticate();
-      console.log("✅ Database connected");
-    } catch (error) {
-      console.error("❌ Unable to connect to the database");
-      process.exit(1);
+### ✅ 1. Get All Orders
+
+**Method:** `GET`  
+**Endpoint:** `/api/orders`
+
+**Optional Query Parameters:**
+
+- `email`: Filter by client email.
+- `status`: Filter by order status (e.g., `pending`, `processing`, etc.).
+
+**Example Request:**
+
+```http
+GET /api/orders?email=client@email.com&status=pending
+```
+
+---
+
+### ✅ 2. Get a Specific Order by ID
+
+**Method:** `GET`  
+**Endpoint:** `/api/orders/:id`
+
+**Example Request:**
+
+```http
+GET /api/orders/12
+```
+
+---
+
+### ✅ 3. Create a New Order
+
+**Method:** `POST`  
+**Endpoint:** `/api/orders`
+
+**Required Body (JSON):**
+
+```json
+{
+  "clientName": "John Doe",
+  "clientEmail": "john@example.com",
+  "status": "pending",
+  "date": "2024-04-17T00:00:00Z",
+  "products": [
+    {
+      "name": "Product A",
+      "unitPrice": 100,
+      "quantity": 2
+    },
+    {
+      "name": "Product B",
+      "unitPrice": 50,
+      "quantity": 1
     }
-  },
-  async sync() {
-    if (process.env.NODE_ENV === "development") {
-      try {
-        await sequelize.sync({ alter: true });
-        console.log("✅ Models synchronized");
-      } catch (error) {
-        console.error("❌ Error synchronizing models");
-        process.exit(1);
-      }
-    }
-  },
-};
+  ]
+}
 ```
 
-### 7. Middleware & Utilities
+---
 
-- helmet – sets secure HTTP headers
+### ✅ 4. Update an Order’s Status
 
-- morgan – logs HTTP requests in development
+**Method:** `PATCH`  
+**Endpoint:** `/api/orders/:id/status`
 
-- cors – enables CORS
+**Required Body (JSON):**
 
-- express.json and express.urlencoded – parses incoming requests
-
-- express-validator – validates incoming data (optional)
-
-### 9. Clean Build
-
-To remove old builds before creating a new one:
-
-```
-npm run clean
-npm run build
+```json
+{
+  "newStatus": "processing"
+}
 ```
 
-### 10. Production Notes
+---
 
-- Avoid using sequelize.sync({ alter: true }) in production.
+### ✅ 5. Delete an Order
 
-- Use migrations (db:migrate:prod) instead for consistent DB changes.
+**Method:** `DELETE`  
+**Endpoint:** `/api/orders/:id`
 
-- Make sure .env variables for production are set securely.
+**Example Request:**
 
-### Tech Stack
-
-- Express.js
-
-- TypeScript
-
-- PostgreSQL + Sequelize
-
-- dotenv for environment config
-
-- helmet, morgan, cors for middleware
-
-## 🛠️ Migrations Guide
-
-This project uses Sequelize CLI to manage database migrations. Below is a typical workflow for creating, running, and reverting migrations in both development and production environments.
-
-### Creating a New Migration
-
-```
-npx sequelize-cli migration:generate --name <migration-name>
+```http
+DELETE /api/orders/12
 ```
 
-🔧 Replace <migration-name> with a descriptive name like create-name-table.
+## 📦 Available REST APIs for Logs Management
 
-This will generate a new file in the migrations/ directory with a boilerplate structure to define your schema changes.
+### ✅ 1. Get Logs by Severity Level
 
-### Running Migrations (Development)
+**Method:** `POST`  
+**Endpoint:** `/api/logs`
 
-```
-npm run db:migrate
-```
+**Required Body (JSON):**
 
-### Reverting the Last Migration
-
-```
-npm run db:migrate:undo
-```
-
-This command applies all pending migrations to your local development database.
-
-This will undo the last executed migration.
-
-To revert all migrations (e.g., for resetting the development database):
-
-```
-npx sequelize-cli db:migrate:undo:all
+```json
+{
+  "level": "high"
+}
 ```
 
-### Creating and Running Seeders
+**Description:**  
+This endpoint retrieves all logs from MongoDB that match the specified severity level.
 
-Create a seeder file:
+**Accepted Values for `level`:**
 
-```
-npx sequelize-cli seed:generate --name <seed-name>
-```
+- `low`
+- `medium`
+- `high`  
+  (depending on how `LogLevelSeverity` is defined).
 
-### Running Seeders (Dummy/Test Data)
-
-```
-npm run db:seed
-```
-
-Make sure you have seeder files inside the seeders/ folder.
-
-### Running Migrations in Development
-
-```
-npm run db:migrate
-npm run db:seed
-```
-
-### Running Migrations in Production
-
-When working in production, carefully apply migrations to the live database:
-
-```
-npm run db:migrate:prod
-npm run db:seed:prod
-```
-
-⚠️ Use these commands with caution in production environments.
+**Description:**  
+This endpoint retrieves all logs from MongoDB that match the specified severity level.
 
 ### Author
 

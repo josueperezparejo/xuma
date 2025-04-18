@@ -41,10 +41,9 @@ module.exports = {
 
       for (let j = 0; j < numProducts; j++) {
         const quantity = faker.number.int({ min: 1, max: 3 });
-        const unitPrice = faker.number.float({
+        const unitPrice = faker.number.int({
           min: 10,
           max: 500,
-          precision: 0.01,
         });
         const total = quantity * unitPrice;
         orderTotal += total;
