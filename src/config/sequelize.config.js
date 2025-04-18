@@ -15,6 +15,12 @@ const config = {
     database: process.env.POSTGRES_DEV_DB,
     host: process.env.POSTGRES_DEV_HOST,
     port: process.env.POSTGRES_DEV_PORT,
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
+    },
   },
   production: {
     ...baseConfig,
@@ -23,6 +29,12 @@ const config = {
     database: process.env.POSTGRES_PROD_DB,
     host: process.env.POSTGRES_PROD_HOST,
     port: process.env.POSTGRES_PROD_PORT,
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
+    },
   },
 };
 
