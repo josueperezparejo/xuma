@@ -6,8 +6,8 @@ import helmet from "helmet";
 import express, { Application } from "express";
 
 import database from "./database/postgres";
-import { orderRoutes } from "./routes";
-import { LogModel, MongoDatabase } from "./database/mongo";
+import { MongoDatabase } from "./database/mongo";
+import { logRoutes, orderRoutes } from "./routes";
 
 dotenv.config();
 
@@ -55,6 +55,7 @@ class Server {
       res.send("Hello world from Express + TypeScript 🚀");
     });
 
+    this.app.use("/api/logs", logRoutes);
     this.app.use("/api/orders", orderRoutes);
   }
 
@@ -75,10 +76,16 @@ class Server {
   public async start(): Promise<void> {
     await this.connectToDatabase();
 
+    let message: string;
+
+    const NODE_ENV = process.env.NODE_ENV || "development";
+
+    NODE_ENV === "production"
+      ? (message = `🚀 Server ${this.getEnvironment} running`)
+      : (message = `🚀 Server ${this.getEnvironment} running at http://localhost:${this.port} `);
+
     this.app.listen(this.port, () => {
-      console.log(
-        `🚀 Server ${this.getEnvironment} running at http://localhost:${this.port} `
-      );
+      console.log(message);
     });
   }
 }

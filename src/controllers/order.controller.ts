@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { orderService } from "../services";
 
-class orderController {
+class OrderController {
   public async getAllOrders(req: Request, res: Response): Promise<void> {
     try {
       const { email, status } = req.query;
@@ -55,4 +55,4 @@ class orderController {
   }
 }
 
-export default new orderController();
+export default new OrderController();

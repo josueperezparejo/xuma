@@ -1,3 +1,4 @@
-import orderController from "./order.controller";
+import LogController from "./log.controller";
+import OrderController from "./order.controller";
 
-export { orderController };
+export { OrderController, LogController };

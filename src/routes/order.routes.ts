@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import { validate } from "../middlewares";
-import { orderController } from "../controllers";
+import { OrderController } from "../controllers";
 import {
   createValidationSchema,
   updateValidationSchema,
@@ -14,27 +14,27 @@ const router = Router();
 router.post(
   "/",
   [...createValidationSchema(), validate],
-  orderController.createOrder
+  OrderController.createOrder
 );
 
 router.patch(
   "/",
   [...updateValidationSchema(), validate],
-  orderController.updateOrder
+  OrderController.updateOrder
 );
 
-router.get("/", orderController.getAllOrders);
+router.get("/", OrderController.getAllOrders);
 
 router.get(
   "/:id",
   [...getOrderByIdValidationSchema(), validate],
-  orderController.getOrderById
+  OrderController.getOrderById
 );
 
 router.delete(
   "/:id",
   [...deleteOrderValidationSchema(), validate],
-  orderController.deleteOrder
+  OrderController.deleteOrder
 );
 
 export { router as orderRoutes };
