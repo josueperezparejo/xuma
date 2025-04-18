@@ -28,12 +28,12 @@ class ProductOrder
 ProductOrder.init(
   {
     id: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
     orderId: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     name: {
@@ -45,7 +45,7 @@ ProductOrder.init(
       allowNull: false,
     },
     quantity: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     total: {
